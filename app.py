@@ -43,5 +43,15 @@ button_layout = [
 ]
 
 # Create the grid of buttons
-for row in (button)
-
+for row in button_layout:
+    cols = st.columns(4)
+    for i, button in enumerate(row):
+        with cols[i]:
+            if st.button(button):
+                if button == "=":
+                    result = calculate_result()
+                    st.write(f"Result: {result}")
+                elif button == "C":
+                    clear_input()
+                else:
+                    update_input(button)
