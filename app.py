@@ -1,5 +1,9 @@
-# hello_world.py
 import streamlit as st
 
-st.title("Communication channel")
-st.write("this is how all its work the extensional platform.")
+# Directly setting font size with CSS
+st.markdown(
+    "<p style='text-align: center; font-size: 24px; color: navy;'>Hello, World!</p>",
+    unsafe_allow_html=True
+)
+
+st.write("Welcome to your first Streamlit app.")
