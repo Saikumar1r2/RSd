@@ -1,7 +1,6 @@
 import streamlit as st
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
 # Function to create a PDF with ReportLab
 def generate_pdf(name, address, mobile, groceries):
     pdf_output = "/mnt/data/grocery_list_reportlab.pdf"
