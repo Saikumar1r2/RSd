@@ -1,47 +1,19 @@
 import streamlit as st
+import pandas as pd
 
-st.title("Simple Calculator")
+# Create a 5x7 DataFrame
+data = {
+    "Column 1": [1, 2, 3, 4, 5],
+    "Column 2": [6, 7, 8, 9, 10],
+    "Column 3": [11, 12, 13, 14, 15],
+    "Column 4": [16, 17, 18, 19, 20],
+    "Column 5": [21, 22, 23, 24, 25],
+    "Column 6": [26, 27, 28, 29, 30],
+    "Column 7": [31, 32, 33, 34, 35]
+}
 
-# State variables to store the current input and operation
-if 'display' not in st.session_state:
-    st.session_state['display'] = '0'
-if 'operation' not in st.session_state:
-    st.session_state['operation'] = None
-if 'first_number' not in st.session_state:
-    st.session_state['first_number'] = None
-if 'second_number_entered' not in st.session_state:
-    st.session_state['second_number_entered'] = False
+# Convert to a DataFrame
+df = pd.DataFrame(data)
 
-def update_display(number):
-    if st.session_state['display'] == '0' or st.session_state['second_number_entered']:
-        st.session_state['display'] = str(number)
-        st.session_state['second_number_entered'] = False
-    else:
-        st.session_state['display'] += str(number)
-
-def perform_operation(operator):
-    if st.session_state['first_number'] is None:
-        st.session_state['first_number'] = float(st.session_state['display'])
-        st.session_state['operation'] = operator
-        st.session_state['second_number_entered'] = True
-    elif st.session_state['operation'] is not None:
-        calculate()
-        st.session_state['first_number'] = float(st.session_state['display'])
-        st.session_state['operation'] = operator
-        st.session_state['second_number_entered'] = True
-
-def calculate():
-    if st.session_state['operation'] and st.session_state['first_number'] is not None:
-        num1 = st.session_state['first_number']
-        num2 = float(st.session_state['display'])
-        if st.session_state['operation'] == '+':
-            st.session_state['display'] = str(num1 + num2)
-        elif st.session_state['operation'] == '-':
-            st.session_state['display'] = str(num1 - num2)
-        elif st.session_state['operation'] == '*':
-            st.session_state['display'] = str(num1 * num2)
-        elif st.session_state['operation'] == '/':
-            if num2 == 0:
-                st.session_state['display'] = "Error"
-            else:
-                st.session_state['display'] = str
+# Display the table
+st.table(df)
