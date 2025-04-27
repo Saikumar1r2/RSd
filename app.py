@@ -1,5 +1,3 @@
-import streamlit as st
-import pandas as pd
 
 # Create a 5x7 DataFrame
 data = {
