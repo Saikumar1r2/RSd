@@ -1,71 +1,46 @@
 import streamlit as st
-from fpdf import FPDF
 
-# Function to create a PDF from collected data
-def generate_pdf(name, address, mobile, groceries):
-    # Create a PDF object
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
+# Initialize session state
+if "step" not in st.session_state:
+    st.session_state.step = 1
 
-    # Set title and font
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, txt="Grocery List", ln=True, align='C')
+# Navigation buttons
+def next_step():
+    st.session_state.step += 1
 
-    # Add Name
-    pdf.ln(10)
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=f"Name: {name}", ln=True)
+def prev_step():
+    st.session_state.step -= 1
 
-    # Add Address
-    pdf.cell(200, 10, txt=f"Address: {address}", ln=True)
+st.title("Label Registration Wizard")
 
-    # Add Mobile Number
-    pdf.cell(200, 10, txt=f"Mobile: {mobile}", ln=True)
+# Wizard Steps
+if st.session_state.step == 1:
+    st.header("1. Select Label Template")
+    label_template = st.selectbox("Choose Label Template:", 
+                                  ["Glassware Label", "Nilotinib Capsule 150mg"])
+elif st.session_state.step == 2:
+    st.header("2. Enter Dilution Details")
+    media_detail = st.text_input("Enter Media Details", placeholder="e.g., 0.01 N HCL")
+elif st.session_state.step == 3:
+    st.header("3. Enter Time Points")
+    time_points = st.number_input("Number of Time Points", min_value=0, step=1)
+elif st.session_state.step == 4:
+    st.header("4. Enter AR.No")
+    ar_no = st.text_input("Enter AR Number", placeholder="e.g., CAI25000854")
+elif st.session_state.step == 5:
+    st.header("5. Electronic Signature")
+    user_id = st.text_input("User ID")
+    e_sign = st.text_input("E-Signature", type="password")
+elif st.session_state.step == 6:
+    st.success("Labels generated successfully!")
+    st.balloons()
 
-    # Add Groceries List
-    pdf.ln(10)
-    pdf.cell(200, 10, txt="Groceries to Buy:", ln=True)
-    for grocery in groceries:
-        pdf.cell(200, 10, txt=f"- {grocery}", ln=True)
+# Navigation Buttons
+col1, col2 = st.columns(2)
+with col1:
+    if st.session_state.step > 1 and st.session_state.step < 6:
+        st.button("Previous", on_click=prev_step)
+with col2:
+    if st.session_state.step < 6:
+        st.button("Next", on_click=next_step)
 
-    # Save PDF to file
-    pdf_output = "/mnt/data/grocery_list.pdf"
-    pdf.output(pdf_output)
-
-    return pdf_output
-
-# Streamlit UI for collecting data
-def main():
-    st.title("Grocery List Form")
-
-    # Collect user inputs using text input and multiselect
-    with st.form(key='grocery_form'):
-        # User inputs
-        name = st.text_input("Enter your Name:")
-        address = st.text_area("Enter your Address:")
-        mobile = st.text_input("Enter your Mobile Number:")
-        groceries = st.multiselect("Select Groceries to Buy:", 
-                                    ["Apples", "Bananas", "Carrots", "Eggs", "Milk", "Bread", "Rice", "Cheese", "Tomatoes"])
-
-        # Submit button
-        submit_button = st.form_submit_button("Generate PDF")
-
-        if submit_button:
-            if name and address and mobile and groceries:
-                # Generate PDF if all fields are filled
-                pdf_file = generate_pdf(name, address, mobile, groceries)
-
-                # Provide a download link for the generated PDF
-                st.success("PDF generated successfully!")
-                st.download_button(
-                    label="Download Grocery List PDF",
-                    data=open(pdf_file, "rb").read(),
-                    file_name="grocery_list.pdf",
-                    mime="application/pdf"
-                )
-            else:
-                st.error("Please fill out all fields.")
-
-if __name__ == "__main__":
-    main()
