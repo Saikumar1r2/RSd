@@ -1,10 +1,12 @@
 import streamlit as st
+from PIL import Image, ImageDraw
 
-# Title
-st.title("Interactive Streamlit Example")
+# Create a blank white image
+img = Image.new('RGB', (200, 200), color='white')
 
-# Slider for user input
-number = st.slider("Pick a number", 1, 100)
+# Draw a red rectangle
+draw = ImageDraw.Draw(img)
+draw.rectangle([50, 50, 150, 150], fill='red')
 
-# Show the squared value
-st.write(f"The square of {number} is {number ** 2}.")
+# Show in Streamlit
+st.image(img, caption="Red Square")
