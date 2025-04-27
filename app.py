@@ -27,18 +27,7 @@ st.header("RSD Calculator")
 cols1, cols2 = st.columns(2)
 
 with cols1:
-    num_rows = st.number_input("Number of Rows", min_value=1, value=3)
-with cols2:
-    num_cols = st.number_input("Number of Columns", min_value=1, value=2)
-
-# Input grid
-data = []
-for row in range(num_rows):
-    cols = st.columns(int(num_cols))
-    row_data = []
-    for col in cols:
-        value = col.number_input(f"Value {row+1}", key=f"{row}_{col}", format="%.5f")
-        row_data.append(value)
+    num_rows = st.number_input("Number of (value)
     data.append(row_data)
 
 data = np.array(data)
@@ -54,5 +43,5 @@ if st.button("Calculate RSDs"):
         mean = np.mean(column_data)
         std_dev = np.std(column_data, ddof=1)
         rsd = (std_dev / mean) * 100
-        st.success(f"Column {i+1}: RSD = {rsd:.2f}%")
+        st.success(f"Column {i+1}:
       
