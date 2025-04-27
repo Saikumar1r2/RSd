@@ -29,6 +29,22 @@ def reset_wizard():
     st.session_state.age = None
     st.session_state.city = ""
 
+# CSS to style the result box
+st.markdown("""
+    <style>
+    .result-box {
+        border: 2px solid #4CAF50;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        width: 300px;
+        margin: auto;
+        text-align: center;
+        margin-top: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Wizard Steps
 if st.session_state.step == 1:
     st.title("Step 1: Enter Your Name")
@@ -72,9 +88,15 @@ elif st.session_state.step == 3:
         if st.button("Finish"):
             if st.session_state.city != "":
                 st.success("Wizard Completed!")
-                st.write(f"Name: {st.session_state.name}")
-                st.write(f"Age: {st.session_state.age}")
-                st.write(f"City: {st.session_state.city}")
+                # Displaying the final result in the rectangular box
+                st.markdown(f"""
+                    <div class="result-box">
+                        <h3>Summary</h3>
+                        <p><strong>Name:</strong> {st.session_state.name}</p>
+                        <p><strong>Age:</strong> {st.session_state.age}</p>
+                        <p><strong>City:</strong> {st.session_state.city}</p>
+                    </div>
+                """, unsafe_allow_html=True)
             else:
                 st.warning("Please enter a valid city!")
     with col2:
