@@ -1,9 +1,20 @@
 import streamlit as st
 
-# Function to display a wizard step
+# Function to display the wizard step inside a box
 def wizard_step(step, title, content):
-    st.markdown(f"### {title}")
-    st.markdown(f'<div style="border:2px solid #4A90E2; padding:15px; border-radius:10px; background-color:#F5F7FA;">{content}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <div style="border:2px solid #4A90E2; padding:20px; border-radius:10px; background-color:#F5F7FA; text-align:center;">
+            <h2 style="margin-bottom:20px;">{title}</h2>
+            <p style="margin-bottom:20px;">{content}</p>
+            <div style="display:flex; justify-content:space-between;">
+                {"<button style='padding:10px; font-size:16px;' onclick='history.back();'>Previous</button>" if step > 1 else ""}
+                {"<button style='padding:10px; font-size:16px;' onclick='window.location.reload();'>Next</button>" if step < len(wizard_steps) else ""}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Define the wizard steps
 wizard_steps = [
@@ -21,10 +32,10 @@ st.title("Wizard Sequence")
 if 'step' not in st.session_state:
     st.session_state.step = 0
 
-# Display the current step
+# Display the current step inside the box
 wizard_step(st.session_state.step + 1, wizard_steps[st.session_state.step]["title"], wizard_steps[st.session_state.step]["content"])
 
-# Navigation buttons
+# Navigation within the box
 col1, col2 = st.columns([1, 1])
 with col1:
     if st.session_state.step > 0:
