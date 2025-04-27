@@ -1,17 +1,27 @@
 import streamlit as st
-from PIL import Image, ImageDraw
 
-# Increase resolution for clarity (e.g., 600x600)
-img = Image.new('RGB', (600, 600), color='white')
+# Title for the app
+st.title("Simple Calculator")
 
-# Create a drawing context
-draw = ImageDraw.Draw(img)
+# Input fields for two numbers
+num1 = st.number_input("Enter the first number", value=0)
+num2 = st.number_input("Enter the second number", value=0)
 
-# Draw a blue rectangle (more accurate)
-draw.rectangle([150, 150, 450, 450], outline="blue", width=10)
+# Select box for operation choice
+operation = st.selectbox("Choose operation", ["Addition", "Subtraction", "Multiplication", "Division"])
 
-# Draw a red circle (anti-aliasing for smooth edges)
-draw.ellipse([200, 200, 400, 400], outline="red", width=10)
+# Perform the selected operation
+if operation == "Addition":
+    result = num1 + num2
+elif operation == "Subtraction":
+    result = num1 - num2
+elif operation == "Multiplication":
+    result = num1 * num2
+elif operation == "Division":
+    if num2 != 0:
+        result = num1 / num2
+    else:
+        result = "Error! Division by zero."
 
-# Show the high-quality image
-st.image(img, caption="High Clarity Circle and Rectangle", use_column_width=True)
+# Display the result
+st.write(f"Result: {result}")
