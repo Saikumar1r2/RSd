@@ -47,4 +47,3 @@ button_layout = [
 # Create the grid of buttons in columns and rows
 for i, row in enumerate(button_layout):
     with cols[0]:
-
