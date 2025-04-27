@@ -72,4 +72,3 @@ elif st.session_state.step == 3:
     with col2:
         if st.button("Previous"):
             previous_step()
-
