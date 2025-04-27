@@ -26,27 +26,31 @@ def evaluate_input():
 # Layout: Display the input field (calculation so far)
 st.text_input("Display", value=st.session_state.input_value, disabled=True, key="display")
 
-# Create the calculator buttons and arrange them in a grid layout
+# Create the calculator buttons and arrange them in a grid layout with proper columns
 col1, col2, col3, col4 = st.columns(4)
 
+# First column with 7, 4, 1, and Clear button
 with col1:
     if st.button("7"): update_input("7")
     if st.button("4"): update_input("4")
     if st.button("1"): update_input("1")
     if st.button("C"): clear_input()
 
+# Second column with 8, 5, 2, and 0
 with col2:
     if st.button("8"): update_input("8")
     if st.button("5"): update_input("5")
     if st.button("2"): update_input("2")
     if st.button("0"): update_input("0")
 
+# Third column with 9, 6, 3, and Decimal (.)
 with col3:
     if st.button("9"): update_input("9")
     if st.button("6"): update_input("6")
     if st.button("3"): update_input("3")
     if st.button("."): update_input(".")
 
+# Fourth column with operations and equals button
 with col4:
     if st.button("/"): update_input(" / ")
     if st.button("*"): update_input(" * ")
