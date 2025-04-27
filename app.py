@@ -4,6 +4,14 @@ import streamlit as st
 if 'step' not in st.session_state:
     st.session_state.step = 1
 
+# Initialize the fields for wizard
+if 'name' not in st.session_state:
+    st.session_state.name = ""
+if 'age' not in st.session_state:
+    st.session_state.age = None
+if 'city' not in st.session_state:
+    st.session_state.city = ""
+
 # Function to go to the next step
 def next_step():
     if st.session_state.step < 3:  # Assuming 3 steps in the wizard
@@ -17,9 +25,9 @@ def previous_step():
 # Function to reset the wizard (optional)
 def reset_wizard():
     st.session_state.step = 1
-    st.session_state.name = ''
-    st.session_state.age = ''
-    st.session_state.city = ''
+    st.session_state.name = ""
+    st.session_state.age = None
+    st.session_state.city = ""
 
 # Wizard Steps
 if st.session_state.step == 1:
@@ -46,7 +54,7 @@ elif st.session_state.step == 2:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Next"):
-            if st.session_state.age > 0:
+            if st.session_state.age is not None and st.session_state.age > 0:
                 next_step()
             else:
                 st.warning("Please enter a valid age!")
