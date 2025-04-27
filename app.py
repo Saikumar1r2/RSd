@@ -59,19 +59,3 @@ if st.sidebar.button("Add Sample"):
     if sample_id and sample_name:
         add_sample(sample_id, sample_name, received_date)
         st.sidebar.success(f"Sample {sample_id} added successfully!")
-    else:
-        st.sidebar.error("Please provide both Sample ID and Name.")
-
-# Display the list of all samples
-st.header("All Samples")
-samples = get_all_samples()
-
-# Convert the sample data into a DataFrame
-df = pd.DataFrame(samples, columns=["Sample ID", "Sample Name", "Received Date"])
-
-# Display the DataFrame
-st.write(df)
-
-# Button to refresh data
-if st.button("Refresh Data"):
-    st.experimental_rerun()
