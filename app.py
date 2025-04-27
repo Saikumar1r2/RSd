@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Set page title
-st.set_page_config(page_title="Calibre LIMS Login")
+st.set_page_config(page_title="Caliber LIMS Login")
 
 # Create a blue rectangle box using markdown and custom CSS
 st.markdown("""
@@ -46,10 +46,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Streamlit UI elements
-user_id = st.text_input("User ID")
-password = st.text_input("Password", type="password")
+user_id = st.text_input("")
+password = st.text_input("", type="")
 
-if st.button("Login"):
+if st.button(""):
     if user_id and password:
         st.success("Login successful!")
     else:
