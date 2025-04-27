@@ -34,49 +34,13 @@ def calculate_result():
 # Display the input area and the current input string
 st.write(f"Input: {st.session_state.input_str}")
 
-# Create a layout for the calculator buttons
-col1, col2, col3, col4 = st.columns(4)
+# Arrange the buttons in a 4x4 grid layout
+button_layout = [
+    ['7', '8', '9', '/'],
+    ['4', '5', '6', '*'],
+    ['1', '2', '3', '-'],
+    ['0', '.', '=', '+']
+]
 
-with col1:
-    if st.button("1"):
-        update_input(1)
-    if st.button("4"):
-        update_input(4)
-    if st.button("7"):
-        update_input(7)
-    if st.button("0"):
-        update_input(0)
-    
-with col2:
-    if st.button("2"):
-        update_input(2)
-    if st.button("5"):
-        update_input(5)
-    if st.button("8"):
-        update_input(8)
-    if st.button("."):
-        update_input(".")
-    
-with col3:
-    if st.button("3"):
-        update_input(3)
-    if st.button("6"):
-        update_input(6)
-    if st.button("9"):
-        update_input(9)
-    if st.button("+"):
-        update_input("+")
-    
-with col4:
-    if st.button("-"):
-        update_input("-")
-    if st.button("*"):
-        update_input("*")
-    if st.button("/"):
-        update_input("/")
-    if st.button("="):
-        result = calculate_result()
-        st.write(f"Result: {result}")
-    if st.button("C"):
-        clear_input()
-
+# Create the grid of buttons
+for row in button
