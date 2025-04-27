@@ -1,80 +1,71 @@
 import streamlit as st
+from fpdf import FPDF
 
-html_code = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfo</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-        }
-        nav {
-            background-color: #444;
-            overflow: hidden;
-        }
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            padding: 14px 16px;
-            text-align: center;
-            text-decoration: none;
-        }
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        section {
-            padding: 20px;
-            margin: 20px;
-            background-color: white;
-            border-radius: 8px;
-        }
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-        }
-    </style>
-</head>
-<body>
+# Function to create a PDF from collected data
+def generate_pdf(name, address, mobile, groceries):
+    # Create a PDF object
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
 
-<header>
-    <h1>Welcome to My Portfolio</h1>
-    <p>Your one-stop destination for all my projects and experience!</p>
-</header>
+    # Set title and font
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Grocery List", ln=True, align='C')
 
-<nav>
-    <a href="#about">About Me</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-</nav>
+    # Add Name
+    pdf.ln(10)
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Name: {name}", ln=True)
 
-<section id="about">
-    <h2>About Me</h2>
-    <p>Hello, I'm John Doe, a passionate web developer with a love for creating innovative solutions.</p>
-</section>
+    # Add Address
+    pdf.cell(200, 10, txt=f"Address: {address}", ln=True)
 
-<footer>
-    <p>© 2025 John Doe. All rights reserved.</p>
-</footer>
+    # Add Mobile Number
+    pdf.cell(200, 10, txt=f"Mobile: {mobile}", ln=True)
 
-</body>
-</html>
-"""
+    # Add Groceries List
+    pdf.ln(10)
+    pdf.cell(200, 10, txt="Groceries to Buy:", ln=True)
+    for grocery in groceries:
+        pdf.cell(200, 10, txt=f"- {grocery}", ln=True)
 
-# Use markdown to render the HTML
-st.markdown(html_code, unsafe_allow_html=True)
+    # Save PDF to file
+    pdf_output = "/mnt/data/grocery_list.pdf"
+    pdf.output(pdf_output)
+
+    return pdf_output
+
+# Streamlit UI for collecting data
+def main():
+    st.title("Grocery List Form")
+
+    # Collect user inputs using text input and multiselect
+    with st.form(key='grocery_form'):
+        # User inputs
+        name = st.text_input("Enter your Name:")
+        address = st.text_area("Enter your Address:")
+        mobile = st.text_input("Enter your Mobile Number:")
+        groceries = st.multiselect("Select Groceries to Buy:", 
+                                    ["Apples", "Bananas", "Carrots", "Eggs", "Milk", "Bread", "Rice", "Cheese", "Tomatoes"])
+
+        # Submit button
+        submit_button = st.form_submit_button("Generate PDF")
+
+        if submit_button:
+            if name and address and mobile and groceries:
+                # Generate PDF if all fields are filled
+                pdf_file = generate_pdf(name, address, mobile, groceries)
+
+                # Provide a download link for the generated PDF
+                st.success("PDF generated successfully!")
+                st.download_button(
+                    label="Download Grocery List PDF",
+                    data=open(pdf_file, "rb").read(),
+                    file_name="grocery_list.pdf",
+                    mime="application/pdf"
+                )
+            else:
+                st.error("Please fill out all fields.")
+
+if __name__ == "__main__":
+    main()
