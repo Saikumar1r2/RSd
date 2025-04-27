@@ -2,30 +2,46 @@ import streamlit as st
 
 st.title("Simple Calculator")
 
-# Input fields for numbers
-num1 = st.number_input("Enter the first number:", value=0.0)
-num2 = st.number_input("Enter the second number:", value=0.0)
+# State variables to store the current input and operation
+if 'display' not in st.session_state:
+    st.session_state['display'] = '0'
+if 'operation' not in st.session_state:
+    st.session_state['operation'] = None
+if 'first_number' not in st.session_state:
+    st.session_state['first_number'] = None
+if 'second_number_entered' not in st.session_state:
+    st.session_state['second_number_entered'] = False
 
-# Operation selection
-operation = st.selectbox(
-    "Select operation:",
-    ["Add", "Subtract", "Multiply", "Divide"]
-)
-
-# Perform calculation based on selection
-if operation == "Add":
-    result = num1 + num2
-elif operation == "Subtract":
-    result = num1 - num2
-elif operation == "Multiply":
-    result = num1 * num2
-elif operation == "Divide":
-    if num2 == 0:
-        result = "Cannot divide by zero!"
+def update_display(number):
+    if st.session_state['display'] == '0' or st.session_state['second_number_entered']:
+        st.session_state['display'] = str(number)
+        st.session_state['second_number_entered'] = False
     else:
-        result = num1 / num2
-else:
-    result = 0
+        st.session_state['display'] += str(number)
 
-# Display the result
-st.write(f"Result of {operation}: {result}")
+def perform_operation(operator):
+    if st.session_state['first_number'] is None:
+        st.session_state['first_number'] = float(st.session_state['display'])
+        st.session_state['operation'] = operator
+        st.session_state['second_number_entered'] = True
+    elif st.session_state['operation'] is not None:
+        calculate()
+        st.session_state['first_number'] = float(st.session_state['display'])
+        st.session_state['operation'] = operator
+        st.session_state['second_number_entered'] = True
+
+def calculate():
+    if st.session_state['operation'] and st.session_state['first_number'] is not None:
+        num1 = st.session_state['first_number']
+        num2 = float(st.session_state['display'])
+        if st.session_state['operation'] == '+':
+            st.session_state['display'] = str(num1 + num2)
+        elif st.session_state['operation'] == '-':
+            st.session_state['display'] = str(num1 - num2)
+        elif st.session_state['operation'] == '*':
+            st.session_state['display'] = str(num1 * num2)
+        elif st.session_state['operation'] == '/':
+            if num2 == 0:
+                st.session_state['display'] = "Error"
+            else:
+                st.session_state['display'] = str
