@@ -1,40 +1,40 @@
 import streamlit as st
 
-# Title
-st.title("Insert Boxes in Streamlit")
+# Function to show the steps
+def show_wizard_step(step):
+    if step == 1:
+        st.title("Step 1: Personal Information")
+        name = st.text_input("What is your name?")
+        age = st.number_input("How old are you?", min_value=1)
+        if st.button("Next"):
+            # Store data in session state and go to next step
+            st.session_state.name = name
+            st.session_state.age = age
+            st.session_state.step = 2
 
-# Custom HTML and CSS for boxes
-html_code = """
-<style>
-/* Styling the box container */
-.box {
-    width: 300px;
-    height: 150px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f2f2f2;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    color: #333;
-}
+    elif step == 2:
+        st.title("Step 2: Contact Information")
+        email = st.text_input("What is your email?")
+        phone = st.text_input("What is your phone number?")
+        if st.button("Next"):
+            # Store data and move to next step
+            st.session_state.email = email
+            st.session_state.phone = phone
+            st.session_state.step = 3
 
-/* Add hover effect */
-.box:hover {
-    background-color: #e0e0e0;
-    transform: scale(1.05);
-    cursor: pointer;
-}
-</style>
+    elif step == 3:
+        st.title("Step 3: Review & Submit")
+        st.write(f"Name: {st.session_state.name}")
+        st.write(f"Age: {st.session_state.age}")
+        st.write(f"Email: {st.session_state.email}")
+        st.write(f"Phone: {st.session_state.phone}")
+        if st.button("Submit"):
+            st.success("Form Submitted Successfully!")
+            st.session_state.step = 1  # Reset wizard after submission
 
-<!-- Creating the boxes -->
-<div class="box">This is Box 1</div>
-<div class="box">This is Box 2</div>
-<div class="box">This is Box 3</div>
-"""
+# Initialize session state variables if they don't exist
+if "step" not in st.session_state:
+    st.session_state.step = 1
 
-# Render the boxes
-st.markdown(html_code, unsafe_allow_html=True)
+# Show the current step based on session state
+show_wizard_step(st.session_state.step)
