@@ -1,61 +1,56 @@
 import streamlit as st
-import sqlite3
-import pandas as pd
-from datetime import datetime
 
-# Function to create and connect to the database
-def create_connection():
-    conn = sqlite3.connect('lims.db')
-    return conn
+# Set page title
+st.set_page_config(page_title="Calibre LIMS Login")
 
-# Function to create the table (if it doesn't exist)
-def create_table():
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS samples (
-            sample_id TEXT PRIMARY KEY,
-            sample_name TEXT,
-            received_date TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# Create a blue rectangle box using markdown and custom CSS
+st.markdown("""
+    <style>
+    .login-box {
+        background-color: #1E90FF;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+    }
+    .login-box h1 {
+        font-family: 'Calibri', sans-serif;
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+    .login-box input {
+        width: 80%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+    }
+    .login-box button {
+        background-color: #4682B4;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    </style>
+    <div class="login-box">
+        <h1>Calibre LIMS</h1>
+        <form>
+            <input type="text" placeholder="User ID" required><br>
+            <input type="password" placeholder="Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+""", unsafe_allow_html=True)
 
-# Function to add a new sample to the database
-def add_sample(sample_id, sample_name, received_date):
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO samples (sample_id, sample_name, received_date)
-        VALUES (?, ?, ?)
-    ''', (sample_id, sample_name, received_date))
-    conn.commit()
-    conn.close()
+# Streamlit UI elements
+user_id = st.text_input("User ID")
+password = st.text_input("Password", type="password")
 
-# Function to get all samples from the database
-def get_all_samples():
-    conn = create_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM samples')
-    samples = cursor.fetchall()
-    conn.close()
-    return samples
-
-# Streamlit UI
-st.title("LIMS - Sample Tracking")
-
-# Create the table if it doesn't exist
-create_table()
-
-# Sidebar: Add new sample
-st.sidebar.header("Add New Sample")
-sample_id = st.sidebar.text_input("Sample ID")
-sample_name = st.sidebar.text_input("Sample Name")
-received_date = st.sidebar.date_input("Received Date", value=datetime.today())
-
-# Button to save the sample
-if st.sidebar.button("Add Sample"):
-    if sample_id and sample_name:
-        add_sample(sample_id, sample_name, received_date)
-        st.sidebar.success(f"Sample {sample_id} added successfully!")
+if st.button("Login"):
+    if user_id and password:
+        st.success("Login successful!")
+    else:
+        st.error("Please enter both User ID and Password.")
