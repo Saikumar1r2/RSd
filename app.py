@@ -1,30 +1,38 @@
 import streamlit as st
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-# Function to create a PDF with ReportLab
-def generate_pdf(name, address, mobile, groceries):
-    pdf_output = "/mnt/data/grocery_list_reportlab.pdf"
-    c = canvas.Canvas(pdf_output, pagesize=letter)
-    
-    # Add title
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(200, 750, "Grocery List")
+from fpdf import FPDF
 
-    # Add Name, Address, and Mobile
-    c.setFont("Helvetica", 12)
-    c.drawString(100, 700, f"Name: {name}")
-    c.drawString(100, 680, f"Address: {address}")
-    c.drawString(100, 660, f"Mobile: {mobile}")
+# Function to create a PDF from collected data
+def generate_pdf(name, address, mobile, groceries):
+    # Create a PDF object
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+
+    # Set title and font
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Grocery List", ln=True, align='C')
+
+    # Add Name
+    pdf.ln(10)
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Name: {name}", ln=True)
+
+    # Add Address
+    pdf.cell(200, 10, txt=f"Address: {address}", ln=True)
+
+    # Add Mobile Number
+    pdf.cell(200, 10, txt=f"Mobile: {mobile}", ln=True)
 
     # Add Groceries List
-    c.drawString(100, 630, "Groceries to Buy:")
-    y_position = 610
+    pdf.ln(10)
+    pdf.cell(200, 10, txt="Groceries to Buy:", ln=True)
     for grocery in groceries:
-        c.drawString(100, y_position, f"- {grocery}")
-        y_position -= 20
+        pdf.cell(200, 10, txt=f"- {grocery}", ln=True)
 
-    # Save PDF
-    c.save()
+    # Save PDF to file
+    pdf_output = "/mnt/data/grocery_list.pdf"
+    pdf.output(pdf_output)
+
     return pdf_output
 
 # Streamlit UI for collecting data
@@ -53,7 +61,7 @@ def main():
                 st.download_button(
                     label="Download Grocery List PDF",
                     data=open(pdf_file, "rb").read(),
-                    file_name="grocery_list_reportlab.pdf",
+                    file_name="grocery_list.pdf",
                     mime="application/pdf"
                 )
             else:
