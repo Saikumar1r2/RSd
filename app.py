@@ -1,27 +1,27 @@
 import streamlit as st
 
-# Title for the app
-st.title("Simple Calculator")
+# Title (optional)
+st.title("")
 
-# Input fields for two numbers
-num1 = st.number_input("Enter the first number", value=0)
-num2 = st.number_input("Enter the second number", value=0)
+# Input fields (no labels, just placeholders)
+num1 = st.number_input("", value=0.0, format="%.2f", key="num1")
+num2 = st.number_input("", value=0.0, format="%.2f", key="num2")
 
-# Select box for operation choice
-operation = st.selectbox("Choose operation", ["Addition", "Subtraction", "Multiplication", "Division"])
+# Simple operation buttons (without labels)
+operation = st.radio("Choose operation", ("+", "-", "×", "÷"), horizontal=True)
 
-# Perform the selected operation
-if operation == "Addition":
+# Perform the calculation
+if operation == "+":
     result = num1 + num2
-elif operation == "Subtraction":
+elif operation == "-":
     result = num1 - num2
-elif operation == "Multiplication":
+elif operation == "×":
     result = num1 * num2
-elif operation == "Division":
+elif operation == "÷":
     if num2 != 0:
         result = num1 / num2
     else:
-        result = "Error! Division by zero."
+        result = "Error"
 
 # Display the result
-st.write(f"Result: {result}")
+st.write(result)
