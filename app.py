@@ -1,66 +1,36 @@
 import streamlit as st
 
-# Define wizard steps
-steps = ["Personal Information", "Preferences", "Confirmation"]
-if "step" not in st.session_state:
+# Function to display a wizard step
+def wizard_step(step, title, content):
+    st.markdown(f"### {title}")
+    st.markdown(f'<div style="border:2px solid #4A90E2; padding:15px; border-radius:10px; background-color:#F5F7FA;">{content}</div>', unsafe_allow_html=True)
+
+# Define the wizard steps
+wizard_steps = [
+    {"title": "Step 1: Introduction", "content": "Welcome to the wizard sequence! Let's get started."},
+    {"title": "Step 2: User Details", "content": "Please provide your personal details."},
+    {"title": "Step 3: Preferences", "content": "Set your preferences for the wizard process."},
+    {"title": "Step 4: Review", "content": "Review the information before proceeding."},
+    {"title": "Step 5: Completion", "content": "Congratulations! You have completed the wizard."}
+]
+
+# Streamlit app
+st.title("Wizard Sequence")
+
+# Session state to track current step
+if 'step' not in st.session_state:
     st.session_state.step = 0
 
-# Functions to navigate steps
-def next_step():
-    if st.session_state.step < len(steps) - 1:
-        st.session_state.step += 1
+# Display the current step
+wizard_step(st.session_state.step + 1, wizard_steps[st.session_state.step]["title"], wizard_steps[st.session_state.step]["content"])
 
-def prev_step():
+# Navigation buttons
+col1, col2 = st.columns([1, 1])
+with col1:
     if st.session_state.step > 0:
-        st.session_state.step -= 1
-
-# Styling for a strict rectangular box layout
-st.markdown("""
-    <style>
-        .wizard-container {
-            max-width: 500px;
-            margin: auto;
-            border: 2px solid #4CAF50;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-st.title("Streamlit Wizard")
-
-# Create a rectangular box using container
-with st.container():
-    st.markdown('<div class="wizard-container">', unsafe_allow_html=True)
-    
-    st.subheader(f"Step {st.session_state.step + 1}: {steps[st.session_state.step]}")
-
-    if st.session_state.step == 0:
-        st.text_input("Enter your name:")
-        st.text_input("Enter your email:")
-        
-    elif st.session_state.step == 1:
-        st.selectbox("Choose your favorite programming language", ["Python", "JavaScript", "C++", "Java"])
-        st.checkbox("Do you like AI?")
-        
-    elif st.session_state.step == 2:
-        st.write("Please confirm your selections and proceed.")
-        st.button("Finish")
-
-    # Navigation buttons
-    st.markdown('<div class="button-container">', unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.button("Previous", on_click=prev_step, disabled=st.session_state.step == 0)
-    with col2:
-        st.button("Next", on_click=next_step, disabled=st.session_state.step == len(steps) - 1)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
+        if st.button("Previous"):
+            st.session_state.step -= 1
+with col2:
+    if st.session_state.step < len(wizard_steps) - 1:
+        if st.button("Next"):
+            st.session_state.step += 1
