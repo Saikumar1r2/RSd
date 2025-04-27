@@ -1,60 +1,40 @@
 import streamlit as st
 
 # Title
-st.title("Beautiful Table in Streamlit")
+st.title("Insert Boxes in Streamlit")
 
-# Custom HTML and CSS
+# Custom HTML and CSS for boxes
 html_code = """
 <style>
-table {
-  border-collapse: collapse;
-  width: 60%;
-  margin: 20px auto;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+/* Styling the box container */
+.box {
+    width: 300px;
+    height: 150px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    color: #333;
 }
-th, td {
-  padding: 12px;
-  border: 1px solid #ccc;
-}
-th {
-  background-color: #4CAF50;
-  color: white;
-}
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-tr:hover {
-  background-color: #ddd;
-  cursor: pointer;
+
+/* Add hover effect */
+.box:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+    cursor: pointer;
 }
 </style>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Age</th>
-    <th>City</th>
-  </tr>
-  <tr>
-    <td>Alice</td>
-    <td>24</td>
-    <td>New York</td>
-  </tr>
-  <tr>
-    <td>Bob</td>
-    <td>30</td>
-    <td>Los Angeles</td>
-  </tr>
-  <tr>
-    <td>Charlie</td>
-    <td>22</td>
-    <td>Chicago</td>
-  </tr>
-</table>
+<!-- Creating the boxes -->
+<div class="box">This is Box 1</div>
+<div class="box">This is Box 2</div>
+<div class="box">This is Box 3</div>
 """
 
-# Render the table
+# Render the boxes
 st.markdown(html_code, unsafe_allow_html=True)
