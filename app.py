@@ -1,50 +1,77 @@
+import streamlit as st
 import sqlite3
+import pandas as pd
+from datetime import datetime
 
-class Sample:
-    def __init__(self, sample_id, sample_name, received_date):
-        self.sample_id = sample_id
-        self.sample_name = sample_name
-        self.received_date = received_date
+# Function to create and connect to the database
+def create_connection():
+    conn = sqlite3.connect('lims.db')
+    return conn
 
-    def save(self):
-        # Connect to SQLite database (or create it)
-        conn = sqlite3.connect('lims.db')
-        cursor = conn.cursor()
+# Function to create the table (if it doesn't exist)
+def create_table():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS samples (
+            sample_id TEXT PRIMARY KEY,
+            sample_name TEXT,
+            received_date TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-        # Create a table if it doesn't exist
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS samples (
-                sample_id TEXT PRIMARY KEY,
-                sample_name TEXT,
-                received_date TEXT
-            )
-        ''')
+# Function to add a new sample to the database
+def add_sample(sample_id, sample_name, received_date):
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO samples (sample_id, sample_name, received_date)
+        VALUES (?, ?, ?)
+    ''', (sample_id, sample_name, received_date))
+    conn.commit()
+    conn.close()
 
-        # Insert sample data into the database
-        cursor.execute('''
-            INSERT INTO samples (sample_id, sample_name, received_date)
-            VALUES (?, ?, ?)
-        ''', (self.sample_id, self.sample_name, self.received_date))
+# Function to get all samples from the database
+def get_all_samples():
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM samples')
+    samples = cursor.fetchall()
+    conn.close()
+    return samples
 
-        conn.commit()
-        conn.close()
+# Streamlit UI
+st.title("LIMS - Sample Tracking")
 
-    @staticmethod
-    def get_all_samples():
-        # Fetch all sample records
-        conn = sqlite3.connect('lims.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM samples')
-        samples = cursor.fetchall()
-        conn.close()
-        return samples
+# Create the table if it doesn't exist
+create_table()
 
-# Example usage:
-# Creating a new sample
-sample1 = Sample("S001", "Blood Sample", "2025-04-26")
-sample1.save()
+# Sidebar: Add new sample
+st.sidebar.header("Add New Sample")
+sample_id = st.sidebar.text_input("Sample ID")
+sample_name = st.sidebar.text_input("Sample Name")
+received_date = st.sidebar.date_input("Received Date", value=datetime.today())
 
-# Fetch and display all samples
-all_samples = Sample.get_all_samples()
-for sample in all_samples:
-    print(sample)
+# Button to save the sample
+if st.sidebar.button("Add Sample"):
+    if sample_id and sample_name:
+        add_sample(sample_id, sample_name, received_date)
+        st.sidebar.success(f"Sample {sample_id} added successfully!")
+    else:
+        st.sidebar.error("Please provide both Sample ID and Name.")
+
+# Display the list of all samples
+st.header("All Samples")
+samples = get_all_samples()
+
+# Convert the sample data into a DataFrame
+df = pd.DataFrame(samples, columns=["Sample ID", "Sample Name", "Received Date"])
+
+# Display the DataFrame
+st.write(df)
+
+# Button to refresh data
+if st.button("Refresh Data"):
+    st.experimental_rerun()
