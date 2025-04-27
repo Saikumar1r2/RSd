@@ -1,5 +1,5 @@
 # hello_world.py
 import streamlit as st
 
-st.title("Hello, World!")
-st.write("Welcome to your first Streamlit app.")
+st.title("Communication channel")
+st.write("this is how all its work the extensional platform.")
